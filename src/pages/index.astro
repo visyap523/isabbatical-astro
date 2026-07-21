@@ -43,10 +43,8 @@ import Layout from '../layouts/Layout.astro';
     <h2>Writing: fiction</h2>
     <p>
       I write fiction, mostly about girls and monsters. I also sometimes write poetry.
-      My published work and forthcoming stories live at
-      <a href="https://isabelyap.com" target="_blank">isabelyap.com</a>.
-      My author newsletter, where I share writing advice, is at
-      <a href="https://visyap.mymagic.page/" target="_blank">hot yuzu tea</a>.
+      My published work and forthcoming stories live at <a href="https://isabelyap.com" target="_blank">isabelyap.com</a>.
+      My author newsletter, where I share writing advice, is at <a href="https://visyap.mymagic.page/" target="_blank">hot yuzu tea</a>.
     </p>
   </section>
 
@@ -100,6 +98,15 @@ import Layout from '../layouts/Layout.astro';
     margin-bottom: 1rem;
   }
 
+  section {
+  margin-bottom: 3rem;
+  padding-top: 2.5rem;
+	}
+
+	section p {
+	font-size: 0.95rem;
+	}
+
   .cue {
     font-family: var(--font-sans) !important;
     font-size: 0.85rem !important; /*force override*/
@@ -124,7 +131,7 @@ import Layout from '../layouts/Layout.astro';
   }
 
   .sidequests li::before {
-    content: '›';
+    content: '→';
     position: absolute;
     left: 0;
     color: var(--ink-light);
