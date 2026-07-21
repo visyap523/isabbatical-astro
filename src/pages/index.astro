@@ -1,0 +1,184 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="home" description="Isa is a Product Manager and writer on sabbatical.">
+
+  <!-- ILLUSTRATED ACCENT — replace comment with <img> when ready -->
+
+  <div class="intro">
+    <p>
+      Hi! I'm Isa. I'm a Product Manager and speculative fiction author
+      currently on sabbatical. I'm documenting my sabbatical projects in this portfolio
+      to teach myself how to use new tools (and get better at building in public).
+    </p>
+    <p class="cue">Learn more below ↓</p>
+  </div>
+
+  <section>
+    <h2>About me</h2>
+    <p>
+      I'm a <a href="https://www.linkedin.com/in/victoriaisabelyap/">Lead PM</a> with a background working on fullstack teams across web and mobile.
+      Most recently I was at Klaviyo for 4.5 years, working primarily on our data platform/infrastructure.
+      I'm using this sabbatical to better understand the current tech landscape, and figure out where and what I want to build next.
+    </p>
+    <p>
+      I'm also a <a href="https://isabelyap.com" target="_blank">published author</a> of sci-fi, fantasy, and horror.
+      You can buy my (award-winning :D) story collection <a href="https://isabelyap.com/never-have-i-ever" target="_blank">here</a>,
+      or at the retailer of your choice.
+    </p>
+    <p>I am currently based in New York City.</p>
+    <p>Want the longer version? <a href="/about">It's here</a>.</p>
+  </section>
+
+  <section>
+    <h2>Writing: essays &amp; notes</h2>
+    <p>
+      Occasional thoughts on what I'm learning, where I'm walking,
+      and what the inside of my brain is like. More soon.
+    </p>
+  </section>
+
+  <section>
+    <h2>Writing: fiction</h2>
+    <p>
+      I write fiction, mostly about girls and monsters. I also sometimes write poetry.
+      My published work and forthcoming stories live at
+      <a href="https://isabelyap.com" target="_blank">isabelyap.com</a>.
+      My author newsletter, where I share writing advice, is at
+      <a href="https://visyap.mymagic.page/" target="_blank">hot yuzu tea</a>.
+    </p>
+  </section>
+
+  <section>
+    <h2>Sabbatical Sidequests</h2>
+    <p>Things I'm working on/learning/exploring this year:</p>
+    <ul class="sidequests">
+      <li>Shikoku Henro</li>
+      <li>New York</li>
+      <li>Protein</li>
+      <li>Head vs chest voice</li>
+      <li>DDIA (the jumping boar data platform book)</li>
+      <li>Learning more effectively</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Stay in touch</h2>
+    <p>
+      I'm thinking of sending an infrequent newsletter of sabbatical
+      updates (like, every 2-3 weeks). If that sounds appealing, sign up here:
+    </p>
+    <form action="https://api.web3forms.com/submit" method="POST">
+      <input type="hidden" name="access_key" value="2af6c0e7-e9b7-43c0-9610-50f3ec089034" />
+      <input type="hidden" name="subject" value="isabbatical newsletter signup" />
+      <div class="form-row">
+        <input type="email" name="email" placeholder="your@email.com" required />
+        <button type="submit">Sign up</button>
+      </div>
+    </form>
+  </section>
+
+  <section>
+    <h2>Say hello</h2>
+    <p>Want to chat about any of the above?</p>
+    <p>Send me a note at hello [at] isabbatical [dot] net.</p>
+  </section>
+
+</Layout>
+
+<style>
+  .intro {
+    margin-bottom: 3rem;
+  }
+
+  .intro p {
+    font-family: var(--font-serif);
+    font-size: 1.2rem;
+    line-height: 1.8;
+    color: var(--ink);
+    margin-bottom: 1rem;
+  }
+
+  .cue {
+    font-family: var(--font-sans) !important;
+    font-size: 0.85rem !important; /*force override*/
+    color: var(--ink-light) !important;
+    letter-spacing: 0.02em;
+  }
+
+  .sidequests {
+    list-style: none;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.4rem 2rem;
+    margin-top: 0.75rem;
+  }
+
+  .sidequests li {
+    font-size: 0.9rem;
+    color: var(--ink);
+    padding: 0.2rem 0;
+    padding-left: 1.25rem;
+    position: relative;
+  }
+
+  .sidequests li::before {
+    content: '›';
+    position: absolute;
+    left: 0;
+    color: var(--ink-light);
+  }
+
+  .form-row {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    margin-bottom: 0.75rem;
+    margin-top: 1rem;
+  }
+
+  input[type="email"],
+  input[type="text"],
+  textarea {
+    font-family: var(--font-sans);
+    font-size: 0.9rem;
+    background: white;
+    border: 1px solid var(--border);
+    color: var(--ink);
+    padding: 0.6rem 0.9rem;
+    border-radius: 2px;
+    flex: 1;
+    min-width: 180px;
+    transition: border-color 0.2s;
+  }
+
+  input:focus, textarea:focus {
+    outline: none;
+    border-color: var(--accent);
+  }
+
+  button[type="submit"] {
+    font-family: var(--font-sans);
+    font-size: 0.8rem;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    background: var(--ink);
+    color: var(--bg);
+    border: none;
+    padding: 0.65rem 1.4rem;
+    cursor: pointer;
+    border-radius: 2px;
+    transition: background 0.2s;
+    white-space: nowrap;
+  }
+
+  button[type="submit"]:hover { background: var(--accent); }
+
+  @media (max-width: 600px) {
+    .sidequests { grid-template-columns: 1fr; }
+    .form-row { flex-direction: column; }
+    input[type="email"] { min-width: 0; }
+  }
+</style>

@@ -1,0 +1,198 @@
+---
+const { title, description = "Isa is on sabbatical, merrily building along.", currentPage } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title} — isabbatical</title>
+
+    <!-- Open Graph: controls link previews in iMessage, Slack, etc. -->
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content="https://isabbatical.net" />
+    <meta property="og:type" content="website" />
+
+    <!-- Google Fonts: Lora (serif) + DM Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet" />
+  </head>
+
+  <body>
+    <!-- NAV: defined once here, appears on every page automatically -->
+    <div class="container">
+      <nav>
+      <a href="/" class="site-name">isabbatical</a>
+        <a href="/about" class={currentPage === 'about' ? 'current' : ''}>about</a>
+        <a href="/essays" class={currentPage === 'essays' ? 'current' : ''}>essays</a>
+        <a href="/sidequests" class={currentPage === 'sidequests' ? 'current' : ''}>sidequests</a>
+      </nav>
+
+      <!-- Each page's content goes here -->
+      <slot />
+
+      <!-- FOOTER: same deal, defined once -->
+      <footer>
+        <p>© 2026 Isabel Yap · built on sabbatical · <a href="https://www.linkedin.com/in/isabelyap" target="_blank">LinkedIn</a></p>
+        <p class="footer-note">This website is made with the assistance of LLMs, but all the content is written by hand. I do not use AI in any part of my creative writing.</p>
+      </footer>
+    </div>
+  </body>
+</html>
+
+<style is:global>
+  /* =============================================
+     DESIGN TOKENS
+     Change these to retheme the entire site.
+     ============================================= */
+  :root {
+    --bg:         #FDF8EE;
+    --ink:        #1C1C1C;
+    --ink-light:  #6B6B6B;
+    --accent:     #5B7FA6;
+    --border:     #E0DED8;
+    --max-width:  680px;
+    --font-serif: 'Lora', Georgia, serif;
+    --font-sans:  'DM Sans', system-ui, sans-serif;
+  }
+
+  /* =============================================
+     RESET
+     ============================================= */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { font-size: 18px; }
+
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--font-sans);
+    line-height: 1.7;
+    padding: 0 1.5rem;
+  }
+
+  /* =============================================
+     LAYOUT
+     ============================================= */
+  .container {
+    max-width: var(--max-width);
+    margin: 0 auto;
+    padding: 3rem 0 6rem;
+  }
+
+  /* =============================================
+     NAVIGATION
+     ============================================= */
+  nav {
+    display: flex;
+    align-items: baseline;
+    gap: 1.5rem;
+    margin-bottom: 4rem;
+    font-size: 0.8rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    font-weight: 500;
+    font-family: var(--font-sans);
+  }
+
+  .site-name {
+    font-family: var(--font-serif);
+    font-size: 1rem;
+    font-weight: 600;
+    font-style: italic;
+    letter-spacing: 0.02em;
+    text-transform: none;
+    color: var(--ink);
+    margin-right: auto;
+    text-decoration: none;
+  }
+
+  nav a {
+    color: var(--ink-light);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  nav a:hover { color: var(--accent); }
+
+  nav a.current { color: var(--ink); }
+
+  /* =============================================
+     SHARED TYPOGRAPHY
+     ============================================= */
+  section {
+    margin-bottom: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border);
+  }
+
+  section h2 {
+    font-family: var(--font-sans);
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-light);
+    margin-bottom: 1rem;
+  }
+
+  section p {
+    font-size: 0.9rem;
+    color: var(--ink);
+    margin-bottom: 0.85rem;
+  }
+
+  section a {
+    color: var(--accent);
+    text-decoration: underline;
+    text-decoration-color: transparent;
+    text-underline-offset: 3px;
+    transition: text-decoration-color 0.2s;
+  }
+
+  section a:hover { text-decoration-color: var(--accent); }
+
+  /* =============================================
+     FOOTER
+     ============================================= */
+  footer {
+    border-top: 1px solid var(--border);
+    padding-top: 1.5rem;
+    margin-top: 2rem;
+    font-size: 0.8rem;
+    color: var(--ink-light);
+    font-family: var(--font-sans);
+  }
+
+  footer a {
+    color: var(--ink-light);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  footer a:hover { color: var(--accent); }
+
+  .footer-note {
+    margin-top: 0.5rem;
+    font-size: 0.75rem;
+    line-height: 1.6;
+  }
+
+  /* =============================================
+     MOBILE
+     ============================================= */
+  @media (max-width: 600px) {
+    nav {
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      justify-content: center;
+    }
+    .site-name {
+      width: 100%;
+      text-align: center;
+      margin-right: 0;
+    }
+  }
+</style>

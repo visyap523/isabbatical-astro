@@ -1,0 +1,216 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="Essays" description="Notes from the sabbatical." currentPage="essays">
+
+  <header class="page-header">
+    <h1>Essays</h1>
+    <p>Notes from the sabbatical.</p>
+  </header>
+
+  <div class="tag-bar">
+    <a class="tag active" href="#">all</a>
+    <a class="tag" href="#">sabbatical</a>
+    <a class="tag" href="#">tech</a>
+    <a class="tag" href="#">product</a>
+    <a class="tag" href="#">walking</a>
+    <a class="tag" href="#">writing</a>
+    <a class="tag" href="#">money</a>
+    <a class="tag" href="#">art</a>
+  </div>
+
+  <ul class="essay-list">
+    <li class="essay-entry" data-tags="sabbatical money product">
+    <div class="essay-meta">
+        <span class="essay-date">July 21, 2026</span>
+        <a class="essay-tag" href="/essays">sabbatical</a>
+        <a class="essay-tag" href="/essays">money</a>
+        <a class="essay-tag" href="/essays">product</a>
+    </div>
+    <h2 class="essay-title">
+        <a href="/essays/why-the-sabbatical">Why the sabbatical</a>
+    </h2>
+    <p class="essay-pullquote">"Because I felt I wasn't really myself anymore, and I don't like it when I'm not myself for too long."</p>
+    <a class="essay-read" href="/essays/why-the-sabbatical">Read →</a>
+    </li>
+  </ul>
+
+</Layout>
+
+<style is:global>
+  .page-header {
+    margin-bottom: 2rem;
+  }
+
+  .page-header h1 {
+    font-family: var(--font-serif);
+    font-size: 1.75rem;
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 0.5rem;
+  }
+
+  .page-header p {
+    font-size: 0.9rem;
+    color: var(--ink-light);
+  }
+
+  .tag-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 3rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .tag {
+    font-family: var(--font-sans);
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink-light);
+    border: 1px solid var(--border);
+    padding: 0.3rem 0.7rem;
+    border-radius: 999px;
+    text-decoration: none;
+    transition: all 0.15s;
+  }
+
+  .tag:hover, .tag.active {
+    color: var(--accent);
+    border-color: var(--accent);
+  }
+
+  .essay-list {
+    list-style: none;
+  }
+
+  .essay-entry {
+    padding-bottom: 2.5rem;
+    margin-bottom: 2.5rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .essay-entry:last-child {
+    border-bottom: none;
+  }
+
+  .essay-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 0.6rem;
+    flex-wrap: wrap;
+  }
+
+  .essay-date {
+    font-size: 0.75rem;
+    color: var(--ink-light);
+    letter-spacing: 0.04em;
+  }
+
+  .essay-tag {
+    font-size: 0.65rem;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--accent);
+    text-decoration: none;
+  }
+
+  .essay-tag:hover {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .essay-title {
+    font-family: var(--font-serif);
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 0.5rem;
+    line-height: 1.4;
+  }
+
+  .essay-title a {
+    color: inherit;
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .essay-title a:hover { color: var(--accent); }
+
+  .essay-pullquote {
+    font-family: var(--font-serif);
+    font-size: 0.9rem;
+    font-style: italic;
+    color: var(--ink-light);
+    line-height: 1.7;
+    margin-bottom: 0.85rem;
+  }
+
+  .essay-read {
+    font-size: 0.8rem;
+    color: var(--accent);
+    text-decoration: underline;
+    text-decoration-color: transparent;
+    text-underline-offset: 3px;
+    transition: text-decoration-color 0.2s;
+  }
+
+  .essay-read:hover {
+    text-decoration-color: var(--accent);
+  }
+
+  .empty-state {
+  font-size: 0.9rem;
+  color: var(--ink-light);
+  padding: 2rem 0;
+}
+</style>
+
+<script>
+  const tags = document.querySelectorAll('.tag');
+  const entries = document.querySelectorAll('.essay-entry');
+  const list = document.querySelector('.essay-list');
+
+  // Create empty state message
+  const emptyState = document.createElement('p');
+  emptyState.className = 'empty-state';
+  emptyState.textContent = 'Nothing to see here yet.';
+  emptyState.style.display = 'none';
+  list.after(emptyState);
+
+  tags.forEach(tag => {
+    tag.addEventListener('click', (e) => {
+      e.preventDefault();
+
+      tags.forEach(t => t.classList.remove('active'));
+      tag.classList.add('active');
+
+      const selected = tag.textContent.toLowerCase().trim();
+      let visibleCount = 0;
+
+      entries.forEach(entry => {
+        if (selected === 'all') {
+          entry.style.display = 'block';
+          visibleCount++;
+        } else {
+          const entryTags = entry.dataset.tags.split(' ');
+          if (entryTags.includes(selected)) {
+            entry.style.display = 'block';
+            visibleCount++;
+          } else {
+            entry.style.display = 'none';
+          }
+        }
+      });
+
+      // Show or hide empty state
+      emptyState.style.display = visibleCount === 0 ? 'block' : 'none';
+    });
+  });
+</script>
