@@ -9,7 +9,8 @@ const places = [
     lat: 40.5860,
     lng: -73.8166,
     text: 'There were sharks in the water, so we had to wait for them to leave before we could swim. Had a beef arepa and a frozen white sangria.',
-    photo: null
+    photo: null,
+    tag: 'other'
   },
   {
     id: 'frick-collection',
@@ -18,7 +19,8 @@ const places = [
     lat: 40.7711,
     lng: -73.9674,
     text: 'I liked not being allowed to take photos in most of the galleries. My favorite pieces might have been JBC Corot\'s The Lake, and Van Dyck\'s Frans Snyders and Portrait of a Genoise Noblewoman.',
-    photo: null
+    photo: null,
+    tag: 'art'
   },
   {
     id: 'konban',
@@ -27,7 +29,8 @@ const places = [
     lat: 40.7420,
     lng: -74.0016,
     text: 'I will order corn nibblets as long as it\'s on a menu. Really enjoyed the scallops too, which I don\'t usually order.',
-    photo: null
+    photo: null,
+    tag: 'food'
   },
   {
     id: 'two-strangers',
@@ -36,7 +39,8 @@ const places = [
     lat: 40.7604,
     lng: -73.9859,
     text: 'I liked the innovative set, and the pair was charismatic. When we walked back out into Times Square it was like getting a New York double-overdose.',
-    photo: null
+    photo: null,
+    tag: 'show'
   },
   {
     id: 'red-door-place',
@@ -45,7 +49,8 @@ const places = [
     lat: 40.7381,
     lng: -74.0004,
     text: 'Joined a Food Distribution session — it was very easy to sign up. Was in charge of rice and lentils. There\'s something hypnotic and soothing about being on an assembly line.',
-    photo: null
+    photo: null,
+    tag: 'other'
   }
 ];
 
@@ -67,6 +72,14 @@ const placesJson = JSON.stringify(places);
     <p>Places I've been on sabbatical.</p>
   </header>
 
+    <div class="tag-bar">
+    <a class="tag active" href="#">all</a>
+    <a class="tag" href="#">food</a>
+    <a class="tag" href="#">art</a>
+    <a class="tag" href="#">show</a>
+    <a class="tag" href="#">other</a>
+    </div>
+
   <div class="map-layout">
 
     <!-- LEFT: scrollable place entries -->
@@ -77,6 +90,7 @@ const placesJson = JSON.stringify(places);
           data-id={place.id}
           data-lat={place.lat}
           data-lng={place.lng}
+          data-tag={place.tag}
         >
           {place.photo && (
             <img src={place.photo} alt={place.name} class="place-photo" />
@@ -168,6 +182,25 @@ const placesJson = JSON.stringify(places);
       });
     });
 
+    // Tag filtering
+const tags = document.querySelectorAll('.tag');
+tags.forEach(tag => {
+  tag.addEventListener('click', (e) => {
+    e.preventDefault();
+    tags.forEach(t => t.classList.remove('active'));
+    tag.classList.add('active');
+
+    const selected = tag.textContent.toLowerCase().trim();
+    entries.forEach(entry => {
+      if (selected === 'all' || entry.dataset.tag === selected) {
+        entry.style.display = 'block';
+      } else {
+        entry.style.display = 'none';
+      }
+    });
+  });
+});
+
     // Activate first entry on load
     const first = places[0];
     activatePlace(first.id, first.lat, first.lng);
@@ -193,9 +226,36 @@ const placesJson = JSON.stringify(places);
     color: var(--ink-light);
   }
 
+    .tag-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 2rem;
+    }
+
+    .tag {
+    font-family: var(--font-sans);
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink-light);
+    border: 1px solid var(--border);
+    padding: 0.3rem 0.7rem;
+    border-radius: 999px;
+    text-decoration: none;
+    transition: all 0.15s;
+    }
+
+    .tag:hover, .tag.active {
+    color: var(--accent);
+    border-color: var(--accent);
+    }
+
   /* =============================================
      TWO-COLUMN LAYOUT
      ============================================= */
+
   .map-layout {
     display: grid;
     grid-template-columns: 1fr 1fr;
