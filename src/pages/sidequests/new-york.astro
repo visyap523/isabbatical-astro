@@ -1,0 +1,315 @@
+---
+import Layout from '../../layouts/Layout.astro';
+
+const places = [
+  {
+    id: 'rockaway-beach',
+    name: 'Rockaway Beach',
+    neighborhood: 'Rockaway, Queens',
+    lat: 40.5860,
+    lng: -73.8166,
+    text: 'There were sharks in the water, so we had to wait for them to leave before we could swim. Had a beef arepa and a frozen white sangria.',
+    photo: null
+  },
+  {
+    id: 'frick-collection',
+    name: 'The Frick Collection',
+    neighborhood: 'Upper East Side',
+    lat: 40.7711,
+    lng: -73.9674,
+    text: 'I liked not being allowed to take photos in most of the galleries. My favorite pieces might have been JBC Corot\'s The Lake, and Van Dyck\'s Frans Snyders and Portrait of a Genoise Noblewoman.',
+    photo: null
+  },
+  {
+    id: 'konban',
+    name: 'Konban',
+    neighborhood: 'Chelsea',
+    lat: 40.7420,
+    lng: -74.0016,
+    text: 'I will order corn nibblets as long as it\'s on a menu. Really enjoyed the scallops too, which I don\'t usually order.',
+    photo: null
+  },
+  {
+    id: 'two-strangers',
+    name: 'Two Strangers Carry a Cake Across New York',
+    neighborhood: 'Times Square',
+    lat: 40.7604,
+    lng: -73.9859,
+    text: 'I liked the innovative set, and the pair was charismatic. When we walked back out into Times Square it was like getting a New York double-overdose.',
+    photo: null
+  },
+  {
+    id: 'red-door-place',
+    name: 'The Red Door Place',
+    neighborhood: 'Greenwich Village',
+    lat: 40.7381,
+    lng: -74.0004,
+    text: 'Joined a Food Distribution session — it was very easy to sign up. Was in charge of rice and lentils. There\'s something hypnotic and soothing about being on an assembly line.',
+    photo: null
+  }
+];
+
+const placesJson = JSON.stringify(places);
+---
+
+<Layout
+  title="New York"
+  description="Places I've been on sabbatical."
+  currentPage="sidequests"
+  url="https://isabbatical.net/sidequests/new-york"
+  wide={true}
+>
+
+  <link slot="head" rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
+  <header class="page-header">
+    <h1>New York</h1>
+    <p>Places I've been on sabbatical.</p>
+  </header>
+
+  <div class="map-layout">
+
+    <!-- LEFT: scrollable place entries -->
+    <div class="entries-column">
+      {places.map(place => (
+        <article
+          class="place-entry"
+          data-id={place.id}
+          data-lat={place.lat}
+          data-lng={place.lng}
+        >
+          {place.photo && (
+            <img src={place.photo} alt={place.name} class="place-photo" />
+          )}
+
+          <div class="place-header">
+            <h2 class="place-name">{place.name}</h2>
+            <span class="place-neighborhood">{place.neighborhood}</span>
+          </div>
+
+          <p class="place-text">{place.text}</p>
+        </article>
+      ))}
+    </div>
+
+    <!-- RIGHT: sticky map -->
+    <div class="map-column">
+      <div id="map"></div>
+    </div>
+
+  </div>
+
+</Layout>
+
+<script define:vars={{ placesJson }}>
+  const script = document.createElement('script');
+  script.src = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';
+  script.onload = () => {
+    const places = JSON.parse(placesJson);
+
+    const map = L.map('map', { zoomControl: false }).setView([40.7128, -74.0060], 11);
+
+    L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png', {
+      attribution: '© Stadia Maps © OpenStreetMap contributors'
+    }).addTo(map);
+
+    const markers = {};
+    const entries = document.querySelectorAll('.place-entry');
+
+    function activatePlace(id, lat, lng) {
+      // Update markers
+      Object.entries(markers).forEach(([markerId, marker]) => {
+        marker.setStyle({
+          fillColor: markerId === id ? '#1C1C1C' : '#5B7FA6',
+          fillOpacity: markerId === id ? 1 : 0.7,
+          radius: markerId === id ? 9 : 7
+        });
+      });
+
+      // Update entries
+      entries.forEach(el => el.classList.remove('active'));
+      document.querySelector(`[data-id="${id}"]`).classList.add('active');
+
+      // Pan map
+      map.flyTo([lat, lng], 14, { duration: 0.8 });
+    }
+
+    places.forEach(place => {
+      const marker = L.circleMarker([place.lat, place.lng], {
+        radius: 7,
+        fillColor: '#5B7FA6',
+        color: '#ffffff',
+        weight: 2,
+        opacity: 1,
+        fillOpacity: 0.7
+      }).addTo(map);
+
+      marker.bindTooltip(place.name, {
+        permanent: false,
+        direction: 'top',
+        offset: [0, -8]
+      });
+
+      // Click marker → activate entry
+      marker.on('click', () => {
+        activatePlace(place.id, place.lat, place.lng);
+      });
+
+      markers[place.id] = marker;
+    });
+
+    // Click entry → activate and pan map
+    entries.forEach(entry => {
+      entry.addEventListener('click', () => {
+        const id = entry.dataset.id;
+        const lat = parseFloat(entry.dataset.lat);
+        const lng = parseFloat(entry.dataset.lng);
+        activatePlace(id, lat, lng);
+      });
+    });
+
+    // Activate first entry on load
+    const first = places[0];
+    activatePlace(first.id, first.lat, first.lng);
+  };
+  document.head.appendChild(script);
+</script>
+
+<style is:global>
+  .page-header {
+    margin-bottom: 2rem;
+  }
+
+  .page-header h1 {
+    font-family: var(--font-serif);
+    font-size: 1.75rem;
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 0.5rem;
+  }
+
+  .page-header p {
+    font-size: 0.9rem;
+    color: var(--ink-light);
+  }
+
+  /* =============================================
+     TWO-COLUMN LAYOUT
+     ============================================= */
+  .map-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+    align-items: start;
+  }
+
+  /* =============================================
+     ENTRIES COLUMN
+     ============================================= */
+  .place-entry {
+    padding: 2rem 0;
+    border-top: 1px solid var(--border);
+    transition: opacity 0.3s;
+  }
+
+  .place-entry:first-child {
+    border-top: none;
+    padding-top: 0;
+  }
+
+  .place-entry:not(.active) {
+    opacity: 0.5;
+  }
+
+  .place-entry {
+  cursor: pointer;
+  user-select: none;
+}
+
+  .place-header {
+    display: flex;
+    align-items: baseline;
+    gap: 0.75rem;
+    margin-bottom: 0.75rem;
+    flex-wrap: wrap;
+  }
+
+  .place-name {
+    font-family: var(--font-serif);
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--ink);
+  }
+
+  .place-neighborhood {
+    font-size: 0.75rem;
+    color: var(--ink-light);
+    font-family: var(--font-sans);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .place-text {
+    font-size: 0.9rem;
+    color: var(--ink);
+    line-height: 1.75;
+  }
+
+  .place-photo {
+    width: 100%;
+    height: 220px;
+    object-fit: cover;
+    border-radius: 3px;
+    margin-bottom: 1rem;
+  }
+
+  /* =============================================
+     MAP COLUMN
+     ============================================= */
+  .map-column {
+    position: sticky;
+    top: 2rem;
+  }
+
+  #map {
+    width: 100%;
+    height: 70vh;
+    border-radius: 4px;
+    border: 1px solid var(--border);
+  }
+
+  .leaflet-tooltip {
+    font-family: var(--font-sans);
+    font-size: 0.75rem;
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    padding: 0.3rem 0.6rem;
+    background: var(--bg);
+    color: var(--ink);
+    box-shadow: none;
+  }
+
+  /* =============================================
+     MOBILE
+     ============================================= */
+  @media (max-width: 768px) {
+    .map-layout {
+      grid-template-columns: 1fr;
+    }
+
+    .map-column {
+      position: relative;
+      top: 0;
+      order: -1;
+    }
+
+    #map {
+      height: 50vw;
+      min-height: 250px;
+    }
+
+    .place-entry:not(.active) {
+      opacity: 1;
+    }
+  }
+</style>

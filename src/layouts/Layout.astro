@@ -1,5 +1,5 @@
 ---
-const { title, description = "Isa is on sabbatical, merrily building along.", currentPage, url = "https://isabbatical.net" } = Astro.props;
+const { title, description = "Isa is on sabbatical, merrily building along.", currentPage, url = "https://isabbatical.net", wide } = Astro.props;
 ---
 
 <!doctype html>
@@ -19,11 +19,14 @@ const { title, description = "Isa is on sabbatical, merrily building along.", cu
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet" />
+  
+    <slot name="head" />
+  
   </head>
 
   <body>
     <!-- NAV: defined once here, appears on every page automatically -->
-    <div class="container">
+    <div class={`container${wide ? ' container--wide' : ''}`}>
       <nav>
       <a href="/" class="site-name">isabbatical</a>
         <a href="/about" class={currentPage === 'about' ? 'current' : ''}>about</a>
@@ -80,6 +83,10 @@ const { title, description = "Isa is on sabbatical, merrily building along.", cu
     max-width: var(--max-width);
     margin: 0 auto;
     padding: 3rem 0 6rem;
+  }
+
+  .container--wide {
+  max-width: 1100px;
   }
 
   /* =============================================
