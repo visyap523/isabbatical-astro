@@ -109,8 +109,8 @@ const placesJson = JSON.stringify(places);
 
     const map = L.map('map', { zoomControl: false }).setView([40.7128, -74.0060], 11);
 
-    L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png', {
-      attribution: '© Stadia Maps © OpenStreetMap contributors'
+    L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png?api_key=970a6347-db83-4d01-a540-84754887473f', {
+    attribution: '© Stadia Maps © OpenStreetMap contributors'
     }).addTo(map);
 
     const markers = {};
