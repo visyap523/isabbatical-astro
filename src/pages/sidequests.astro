@@ -1,19 +1,79 @@
 ---
 import Layout from '../layouts/Layout.astro';
+
+const sidequests = [
+  {
+    title: 'New York',
+    emoji: '🗽',
+    description: "Some places I've been on sabbatical.",
+    href: '/sidequests/new-york',
+    status: 'in progress'
+  },
+  {
+    title: 'DDIA',
+    emoji: '🐗',
+    description: 'Finally reading Designing Data-Intensive Applications by Martin Kleppmann.',
+    href: '/sidequests/ddia',
+    status: 'in progress'
+  },
+  {
+    title: 'Shikoku Henro',
+    emoji: '⛩️',
+    description: 'Walking the 88-template pilgrimage in Shikoku. Plus, building an app.',
+    href: '#',
+    status: 'coming soon'
+  },
+  {
+    title: 'Head vs Chest Voice',
+    emoji: '🎤',
+    description: 'Will I ever hit that high note? Progress recordings over time.',
+    href: '#',
+    status: 'coming soon'
+  },
+  {
+    title: 'Protein',
+    emoji: '🥩',
+    description: "100g is very difficult to achieve. We persist.",
+    href: '#',
+    status: 'coming soon'
+  }
+];
 ---
 
-<Layout title="Sidequests" description="Witness me as I walk around my city, horf down protein, and improve my pharyngeal resonance." currentPage="sidequests" url="https://isabbatical.net/sidequests">
+<Layout
+  title="Sidequests"
+  description="Isa's sabbatical sidequests."
+  currentPage="sidequests"
+  url="https://isabbatical.net/sidequests"
+>
 
   <header class="page-header">
     <h1>Sidequests</h1>
-    <p>Witness me as I walk around <a href="/sidequests/new-york">my city</a>, horf down protein, and improve my pharyngeal resonance. Coming soon.</p>
+    <p>Witness me as I walk around my city, horf down protein, and improve my pharyngeal resonance.</p>
   </header>
+
+  <div class="sidequest-grid">
+    {sidequests.map(quest => (
+      <a
+        class="sidequest-card"
+        data-coming={quest.status === 'coming soon'}
+        href={quest.href}
+      >
+        <div class="card-top">
+      <span class="sidequest-status">{quest.status}</span>
+      <span class="sidequest-emoji">{quest.emoji}</span>
+       </div>
+        <h2 class="sidequest-title">{quest.title}</h2>
+        <p class="sidequest-description">{quest.description}</p>
+      </a>
+    ))}
+  </div>
 
 </Layout>
 
 <style>
   .page-header {
-    margin-bottom: 2rem;
+    margin-bottom: 3rem;
   }
 
   .page-header h1 {
@@ -29,15 +89,73 @@ import Layout from '../layouts/Layout.astro';
     color: var(--ink-light);
   }
 
-  p a {
-    color: var(--accent);
-    text-decoration: underline;
-    text-decoration-color: transparent;
-    text-underline-offset: 3px;
-    transition: text-decoration-color 0.2s;
+  .sidequest-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
   }
 
-  p a:hover {
-    text-decoration-color: var(--accent);
+  .sidequest-card {
+    display: block;
+    padding: 1.5rem;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    text-decoration: none;
+    color: inherit;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+
+  .sidequest-card[data-coming="true"] {
+    opacity: 0.5;
+    cursor: default;
+    pointer-events: none;
+  }
+
+  .sidequest-card:not([data-coming="true"]):hover {
+    border-color: var(--accent);
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  }
+
+  .card-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0.75rem;
+  }
+
+  .sidequest-emoji {
+    font-size: 1.1rem;
+  }
+
+  .sidequest-status {
+    font-size: 0.65rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-light);
+    border: 1px solid var(--border);
+    padding: 0.2rem 0.5rem;
+    border-radius: 999px;
+  }
+
+  .sidequest-title {
+    font-family: var(--font-serif);
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 0.4rem;
+    line-height: 1.3;
+  }
+
+  .sidequest-description {
+    font-size: 0.85rem;
+    color: var(--ink-light);
+    line-height: 1.6;
+  }
+
+  @media (max-width: 600px) {
+    .sidequest-grid {
+      grid-template-columns: 1fr;
+    }
   }
 </style>

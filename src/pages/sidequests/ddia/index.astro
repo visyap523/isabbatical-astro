@@ -1,0 +1,126 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+import { getCollection } from 'astro:content';
+
+const chapters = await getCollection('ddia');
+chapters.sort((a, b) => a.data.chapter - b.data.chapter);
+console.log(chapters.map(c => c.id)); // temporary debug line
+---
+
+<Layout
+  title="DDIA Notes"
+  description="Notes from Designing Data-Intensive Applications by Martin Kleppmann."
+  currentPage="sidequests"
+  url="https://isabbatical.net/sidequests/ddia"
+>
+
+  <header class="page-header">
+    <h1>Designing Data-Intensive Applications</h1>
+    <p>Reading notes from the jumping boar book. Martin Kleppmann's book is <a href="https://dataintensive.net" target="_blank">here</a>.</p>
+  </header>
+
+  <ul class="chapter-list">
+    {chapters.map(chapter => (
+      <li class="chapter-entry">
+        <a href={`/sidequests/ddia/${chapter.id}`} class="chapter-link">
+          <span class="chapter-number">Ch {chapter.data.chapter}</span>
+          <div class="chapter-info">
+            <h2 class="chapter-title">{chapter.data.title}</h2>
+            <p class="chapter-summary">{chapter.data.summary}</p>
+          </div>
+          <span class="chapter-arrow">→</span>
+        </a>
+      </li>
+    ))}
+  </ul>
+
+</Layout>
+
+<style>
+  .page-header {
+    margin-bottom: 1.5rem;
+  }
+
+  .page-header h1 {
+    font-family: var(--font-serif);
+    font-size: 1.75rem;
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 0.5rem;
+  }
+
+  .page-header p {
+    font-size: 0.9rem;
+    color: var(--ink-light);
+  }
+
+  .page-header a {
+    color: var(--accent);
+    text-decoration: underline;
+    text-decoration-color: transparent;
+    text-underline-offset: 3px;
+    transition: text-decoration-color 0.2s;
+  }
+
+  .page-header a:hover {
+    text-decoration-color: var(--accent);
+  }
+
+  .chapter-list {
+    list-style: none;
+    margin-top: -1px;
+  }
+
+  .chapter-entry {
+    border-top: 1px solid var(--border);
+  }
+
+  .chapter-link {
+    display: flex;
+    align-items: baseline;
+    gap: 1.5rem;
+    padding: 1.25rem 0;
+    text-decoration: none;
+    color: inherit;
+    transition: opacity 0.15s;
+  }
+
+  .chapter-link:hover {
+    opacity: 0.7;
+  }
+
+  .chapter-number {
+    font-family: var(--font-sans);
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink-light);
+    min-width: 2.5rem;
+    flex-shrink: 0;
+  }
+
+  .chapter-info {
+    flex: 1;
+  }
+
+  .chapter-title {
+    font-family: var(--font-serif);
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 0.25rem;
+  }
+
+  .chapter-summary {
+    font-size: 0.85rem;
+    color: var(--ink-light);
+    line-height: 1.5;
+  }
+
+  .chapter-arrow {
+    font-size: 0.85rem;
+    color: var(--ink-light);
+    flex-shrink: 0;
+  }
+</style>
