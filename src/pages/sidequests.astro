@@ -28,4 +28,16 @@ import Layout from '../layouts/Layout.astro';
     font-size: 0.9rem;
     color: var(--ink-light);
   }
+
+  p a {
+    color: var(--accent);
+    text-decoration: underline;
+    text-decoration-color: transparent;
+    text-underline-offset: 3px;
+    transition: text-decoration-color 0.2s;
+  }
+
+  p a:hover {
+    text-decoration-color: var(--accent);
+  }
 </style>

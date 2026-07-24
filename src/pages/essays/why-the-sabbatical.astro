@@ -9,9 +9,12 @@ import Layout from '../../layouts/Layout.astro';
   <header class="essay-header">
     <div class="essay-meta">
       <span class="essay-date">July 21, 2026</span>
-      <a class="essay-tag" href="/essays">sabbatical</a>
-      <a class="essay-tag" href="/essays">money</a>
-      <a class="essay-tag" href="/essays">product</a>
+      <div class="essay-tags">
+        <a class="essay-tag" href="/essays">sabbatical</a>
+        <a class="essay-tag" href="/essays">money</a>
+        <a class="essay-tag" href="/essays">product</a>
+      </div>
+      <span class="reading-time"></span>
     </div>
     <h1 class="essay-title">Why the sabbatical</h1>
     <p class="essay-lede">A whole lot of reasons.</p>
@@ -74,6 +77,30 @@ import Layout from '../../layouts/Layout.astro';
     gap: 0.75rem;
     margin-bottom: 1rem;
   }
+
+  .essay-tags {
+  display: flex;
+  gap: 0.75rem;
+  }
+
+@media (max-width: 600px) {
+  .essay-meta {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.3rem;
+  }
+
+  .essay-tags {
+    display: flex;
+    gap: 0.75rem;
+  }
+
+  .reading-time {
+    padding-left: 0;
+    border-left: none;
+    margin-left: 0;
+  }
+} 
 
   .essay-date {
     font-size: 0.75rem;
