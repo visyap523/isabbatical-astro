@@ -58,6 +58,7 @@ const sidequests = [
         class="sidequest-card"
         data-coming={quest.status === 'coming soon'}
         href={quest.href}
+        target={quest.href.startsWith('http') ? '_blank' : '_self'}
       >
         <div class="card-top">
       <span class="sidequest-status">{quest.status}</span>
