@@ -1,0 +1,409 @@
+---
+export const prerender = false;
+import Layout from '../../layouts/Layout.astro';
+import { env } from 'cloudflare:workers';
+
+const db = env.henro_db;
+
+// Fetch all packing items
+const { results: items } = await db.prepare(
+  "SELECT * FROM packing_items ORDER BY category, item"
+).all();
+
+// Group by category
+const grouped = items.reduce((acc, item) => {
+  if (!acc[item.category]) acc[item.category] = [];
+  acc[item.category].push(item);
+  return acc;
+}, {});
+
+const totalItems = items.length;
+const packedItems = items.filter(i => i.packed).length;
+const percent = totalItems > 0 ? Math.round((packedItems / totalItems) * 100) : 0;
+---
+
+<Layout
+  title="Packing List — Henro"
+  description="Everything I need for the Shikoku Henro."
+  currentPage="sidequests"
+  url="https://isabbatical.net/henro/pack"
+>
+
+  <a href="/henro" class="back-link">← Henro</a>
+
+  <header class="page-header">
+    <h1>Packing List</h1>
+    <p>Everything for the trail.</p>
+  </header>
+
+  {totalItems === 0 ? (
+    <div class="empty-state">
+      <p>No items yet. Add your first item below.</p>
+    </div>
+  ) : (
+    <div class="progress-section">
+      <div class="progress-header">
+        <span class="progress-label">Packed</span>
+        <span class="progress-count">{packedItems} / {totalItems}</span>
+      </div>
+      <div class="progress-bar-track">
+        <div class="progress-bar-fill" style={`width: ${percent}%`}></div>
+      </div>
+    </div>
+  )}
+
+  <!-- ADD ITEM FORM -->
+  <form method="POST" action="/api/pack-add" class="add-form">
+    <div class="add-row">
+      <input
+        type="text"
+        name="item"
+        placeholder="Item name"
+        required
+        class="add-input"
+      />
+      <select name="category" class="add-select">
+        <option value="Clothing">Clothing</option>
+        <option value="Gear">Gear</option>
+        <option value="Documents">Documents</option>
+        <option value="Medicine">Medicine</option>
+        <option value="Electronics">Electronics</option>
+        <option value="Pilgrimage">Pilgrimage items</option>
+        <option value="Other">Other</option>
+      </select>
+      <button type="submit" class="add-btn">Add</button>
+    </div>
+  </form>
+
+  <!-- PACKING LIST -->
+  {Object.entries(grouped).map(([category, categoryItems]) => (
+    <div class="category-group">
+      <div class="category-header">
+        <h2 class="category-name">{category}</h2>
+        <span class="category-count">
+          {categoryItems.filter(i => i.packed).length}/{categoryItems.length}
+        </span>
+      </div>
+
+      {categoryItems.map(item => (
+        <div class={`pack-row ${item.packed ? 'packed' : ''}`} data-id={item.id}>
+          <form method="POST" action="/api/pack-toggle" class="toggle-form">
+            <input type="hidden" name="id" value={item.id} />
+            <input type="hidden" name="packed" value={item.packed ? '0' : '1'} />
+            <button type="submit" class={`pack-btn ${item.packed ? 'packed' : ''}`}>
+              {item.packed ? '✓' : '○'}
+            </button>
+          </form>
+
+          <span class="pack-item-name">{item.item}</span>
+
+          <form method="POST" action="/api/pack-delete" class="delete-form">
+            <input type="hidden" name="id" value={item.id} />
+            <button type="submit" class="delete-btn" title="Remove">×</button>
+          </form>
+        </div>
+      ))}
+    </div>
+  ))}
+
+</Layout>
+
+<script>
+  // Toggle packed without page reload
+  document.querySelectorAll('.toggle-form').forEach(form => {
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const formData = new FormData(form);
+      const row = form.closest('.pack-row');
+      const btn = form.querySelector('.pack-btn');
+      const isPacking = formData.get('packed') === '1';
+
+      await fetch('/api/pack-toggle', { method: 'POST', body: formData });
+
+      if (isPacking) {
+        btn.textContent = '✓';
+        btn.classList.add('packed');
+        row.classList.add('packed');
+        form.querySelector('[name="packed"]').value = '0';
+      } else {
+        btn.textContent = '○';
+        btn.classList.remove('packed');
+        row.classList.remove('packed');
+        form.querySelector('[name="packed"]').value = '1';
+      }
+
+      updateProgress();
+    });
+  });
+
+  // Delete item without page reload
+  document.querySelectorAll('.delete-form').forEach(form => {
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const formData = new FormData(form);
+      const row = form.closest('.pack-row');
+
+      await fetch('/api/pack-delete', { method: 'POST', body: formData });
+      row.remove();
+      updateProgress();
+    });
+  });
+
+  // Add item — let this do a full reload so new item appears
+  // (no JS intercept needed here)
+
+  function updateProgress() {
+    const allRows = document.querySelectorAll('.pack-row');
+    const packedRows = document.querySelectorAll('.pack-row.packed');
+    const total = allRows.length;
+    const packed = packedRows.length;
+    const percent = total > 0 ? Math.round((packed / total) * 100) : 0;
+
+    const countEl = document.querySelector('.progress-count');
+    const fillEl = document.querySelector('.progress-bar-fill');
+    if (countEl) countEl.textContent = `${packed} / ${total}`;
+    if (fillEl) fillEl.style.width = `${percent}%`;
+}
+</script>
+
+<style is:global>
+  .back-link {
+    display: inline-block;
+    font-size: 0.8rem;
+    color: var(--ink-light);
+    text-decoration: none;
+    margin-bottom: 2rem;
+    transition: color 0.2s;
+  }
+
+  .back-link:hover { color: var(--accent); }
+
+  .page-header {
+    margin-bottom: 2rem;
+  }
+
+  .page-header h1 {
+    font-family: var(--font-serif);
+    font-size: 1.75rem;
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 0.5rem;
+  }
+
+  .page-header p {
+    font-size: 0.9rem;
+    color: var(--ink-light);
+  }
+
+  .empty-state {
+    font-size: 0.9rem;
+    color: var(--ink-light);
+    font-style: italic;
+    padding: 2rem 0;
+  }
+
+  /* PROGRESS */
+  .progress-section {
+    background: #FEFCF5;
+    margin-bottom: 2rem;
+    padding: 1.5rem;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+  }
+
+  .progress-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 0.75rem;
+  }
+
+  .progress-label {
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-light);
+  }
+
+  .progress-count {
+    font-size: 0.85rem;
+    color: var(--ink);
+  }
+
+  .progress-bar-track {
+    width: 100%;
+    height: 4px;
+    background: var(--border);
+    border-radius: 999px;
+    overflow: hidden;
+  }
+
+  .progress-bar-fill {
+    height: 100%;
+    background: var(--accent);
+    border-radius: 999px;
+    min-width: 2px;
+    transition: width 0.3s ease;
+  }
+
+  /* ADD FORM */
+  .add-form {
+    margin-bottom: 2rem;
+  }
+
+  .add-row {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+
+  .add-input {
+    font-family: var(--font-sans);
+    font-size: 0.9rem;
+    background: white;
+    border: 1px solid var(--border);
+    color: var(--ink);
+    padding: 0.6rem 0.9rem;
+    border-radius: 2px;
+    flex: 1;
+    min-width: 160px;
+    transition: border-color 0.2s;
+  }
+
+  .add-input:focus {
+    outline: none;
+    border-color: var(--accent);
+  }
+
+    .add-select {
+    font-family: var(--font-sans);
+    font-size: 0.85rem;
+    background: white;
+    border: 1px solid var(--border);
+    color: var(--ink);
+    padding: 0.6rem 2rem 0.6rem 0.9rem;
+    border-radius: 2px;
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236B6B6B' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.75rem center;
+    }
+
+  .add-btn {
+    font-family: var(--font-sans);
+    font-size: 0.8rem;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    background: var(--ink);
+    color: var(--bg);
+    border: none;
+    padding: 0.65rem 1.2rem;
+    cursor: pointer;
+    border-radius: 2px;
+    transition: background 0.2s;
+    white-space: nowrap;
+  }
+
+  .add-btn:hover { background: var(--accent); }
+
+  /* CATEGORY GROUP */
+  .category-group {
+    margin-bottom: 2rem;
+  }
+
+  .category-header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 0.25rem;
+  }
+
+  .category-name {
+    font-family: var(--font-sans);
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-light);
+  }
+
+  .category-count {
+    font-size: 0.75rem;
+    color: var(--ink-light);
+  }
+
+  /* PACK ROW */
+  .pack-row {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.6rem 0;
+    border-bottom: 1px solid var(--border);
+    transition: opacity 0.2s;
+  }
+
+  .pack-row.packed {
+    opacity: 0.4;
+  }
+
+  .pack-item-name {
+    flex: 1;
+    font-size: 0.9rem;
+    color: var(--ink);
+  }
+
+  .pack-row.packed .pack-item-name {
+    text-decoration: line-through;
+  }
+
+  /* PACK BUTTON */
+  .pack-btn {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: 1.5px solid var(--border);
+    background: transparent;
+    cursor: pointer;
+    font-size: 0.8rem;
+    color: var(--ink-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s;
+    flex-shrink: 0;
+  }
+
+  .pack-btn:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  .pack-btn.packed {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: white;
+  }
+
+  /* DELETE BUTTON */
+  .delete-btn {
+    background: transparent;
+    border: none;
+    color: var(--ink-light);
+    cursor: pointer;
+    font-size: 1rem;
+    padding: 0 0.25rem;
+    transition: color 0.15s;
+    flex-shrink: 0;
+  }
+
+  .delete-btn:hover { color: #c0392b; }
+
+  @media (max-width: 600px) {
+    .add-row { flex-direction: column; }
+  }
+</style>

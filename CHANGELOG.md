@@ -61,6 +61,8 @@
 - Added 5 entries: Rockaway Beach, The Frick Collection, Konban, Two Strangers, The Red Door Place
 - Fixed essay meta mobile layout (date/tags/reading time on separate lines)
 - Fixed sidequests link color
+- Added DDIA chapter one
+- Updated sidequests page with tiles
 - Shipped all updates to isabbatical.net
 
 ## July 21, 2026
