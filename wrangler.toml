@@ -1,0 +1,17 @@
+name = "isabbatical-astro"
+compatibility_date = "2026-07-25"
+compatibility_flags = ["global_fetch_strictly_public"]
+main = "@astrojs/cloudflare/entrypoints/server"
+pages_build_output_dir = "./dist"
+
+[assets]
+directory = "./dist"
+binding = "ASSETS"
+
+[observability]
+enabled = true
+
+[[d1_databases]]
+binding = "henro_db"
+database_name = "henro-db"
+database_id = "540f4917-8d8d-4580-a2ed-b6aefe64994f"
