@@ -1,12 +1,7 @@
 name = "isabbatical-astro"
 compatibility_date = "2026-07-25"
 compatibility_flags = ["global_fetch_strictly_public"]
-main = "@astrojs/cloudflare/entrypoints/server"
 pages_build_output_dir = "./dist"
-
-[assets]
-directory = "./dist"
-binding = "ASSETS"
 
 [observability]
 enabled = true
