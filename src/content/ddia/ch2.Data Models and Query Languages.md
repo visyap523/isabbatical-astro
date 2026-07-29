@@ -101,8 +101,6 @@ summary: "High-level view of different data models (document, relational, graph)
   * SPARQL query language is for triple-stores using RDF data model
 * Brief discussion of Datalog approach; rules can be combined and reused in different queries. Not good for one-offs, but maybe better if data is complex.
 
----
-
 ## Notes from my own experience
 * Relevant to lots of things we built.
   * Issues of JSON blob and wanting to promote certain relevant fields (query nested data or second-level data)
