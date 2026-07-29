@@ -5,9 +5,6 @@ date: "2026-07-29"
 summary: "High-level view of different data models (document, relational, graph) and their query languages."
 ---
 
-# Ch 2: Data Models and Query Languages
-#ddia/chapters
-
 ### Summary
 * Hierarchical model: data is one big tree
 * Relational model: depicted many-to-many relationships (SQL)
