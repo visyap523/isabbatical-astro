@@ -5,7 +5,7 @@ date: "2026-07-29"
 summary: "High-level view of different data models (document, relational, graph) and their query languages."
 ---
 
-### Summary
+## Summary
 * Hierarchical model: data is one big tree
 * Relational model: depicted many-to-many relationships (SQL)
 * NoSQL data stores: diverged in two directions
@@ -17,8 +17,7 @@ summary: "High-level view of different data models (document, relational, graph)
   * Implicit: assumed on read
 * Each data model comes with its own query language or framework: SQL, Cypher, SPARQL, MapReduce, Datalog as some.
 
-### Intro
-
+## Intro
 * Data models matter because they affect not only how the software is written, but also how we think about the problem we’re solving.
 * Most applications are built by layering one data model on top of another. For each layer, the key question is, how is it represented in terms of the next-lower layer? Example:
   * An app developer looks at the real world and models it in terms of real world objects or data structures, and APIs that manipulate those, specific to your application (people, orgs, goods, actions, money flows, etc)
@@ -28,7 +27,7 @@ summary: "High-level view of different data models (document, relational, graph)
 * Each layer hides the complexity of the layers below it by providing a clean data model. 
 * This chapter focuses on general-pupose data models for data storage and querying.
 
-### Relational Model VS Document Model
+## Relational Model VS Document Model
 * SQL: data is organized into relations (tables, in SQL), where each relation is an unordered collection of tuples (rows, in SQL)
 * Used primarily in *business data processing*; transaction processing (ex. airline reservations, stockkeeping), batch processing (ex. payroll, reporting)
 * NoSQL came up in 2010s, generally reinterpreted as *Not Only SQL.* Surfaces the need for greater scalability than relational databases can easily achieve, and specialized query operations; relational schemas can be restrictive.
@@ -69,13 +68,13 @@ summary: "High-level view of different data models (document, relational, graph)
   * Schema-on-read is handy when data is heterogenous/items in collection don’t all have the same structure, ex. they’re from external systems, or there’s many types of objects
 * **Data locality for queries:** locality advantage only applies if you need large parts of the doc at the same time. Database needs to load the entire doc for only a small section. And if you only need to update a part of it, you have to update the whole doc. These performance limitations reduce situations in which document databases are useful.
 
-### Query Languages for Data
+## Query Languages for Data
 * Imperative language: tell the computer to perform certain operations in a certain order. Step through the code line-by-line, evaluate, update, decide if you loop again.
 * Declarative query language (ex. SQL), just specify the pattern of the data you want, but not how to achieve the goal. Then database system’s query optimizer decides which indexes and join methods to use, and in which order to execute the query.
   * Typically more concise and easier to work with
   * Lend themselves better to parallel execution
 
-### Graph-like Data Models
+## Graph-like Data Models
 * Useful if connections within your data become more complex
 * Two kinds of objects:
   * Vertices (also nodes or entities)
@@ -104,7 +103,7 @@ summary: "High-level view of different data models (document, relational, graph)
 
 ---
 
-### Notes from my own experience
+## Notes from my own experience
 * Relevant to lots of things we built.
   * Issues of JSON blob and wanting to promote certain relevant fields (query nested data or second-level data)
   * That tradeoff of flattened/fast VS oh you have to make multiple queries, or else invent a system that supports joins
