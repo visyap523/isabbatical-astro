@@ -52,6 +52,17 @@
 
 # Changelog Entries
 
+## July 25, 2026
+- Built Henro app as separate Cloudflare Worker at henro.isabbatical.net
+- Set up Cloudflare D1 database with all 88 temples, addresses, Wikimedia image URLs
+- Built temple tracker with search, filtering, and check-off
+- Built packing list with 60+ pre-seeded items
+- Built DDIA notes section with content collections and dynamic routing
+- Rebuilt sidequests page as tiled card grid with emoji and status badges
+- Added NYC tag filtering (restaurant, art, show, other)
+- Fixed Stadia Maps 401 with API key
+- Migrated main site back to clean static deployment
+
 ## July 24, 2026
 - Built NYC walking map page (/sidequests/new-york) with Leaflet.js + Stadia Maps
 - Implemented click-to-activate map interaction (entries + markers)
