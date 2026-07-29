@@ -79,22 +79,33 @@ const { Content } = await render(chapter);
   }
 
   /* Section headings — match About page label style */
-  .chapter-body h2 {
-    font-family: var(--font-sans);
-    font-size: 0.75rem;
-    font-weight: 500;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--ink-light);
-    margin-bottom: 0.75rem;
-    margin-top: 0;
-    padding-top: 1rem;
-    border-top: 1px solid var(--border);
-  }
+.chapter-body h2 {
+  font-family: var(--font-sans);
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink);
+  margin-bottom: 0.75rem;
+  margin-top: 0;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border);
+}
 
-  .chapter-body h2:first-child {
+.chapter-body h2:first-child {
   border-top: none;
   padding-top: 0;
+}
+
+.chapter-body h3 {
+  font-family: var(--font-sans);
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-light);
+  margin-bottom: 0.4rem;
+  margin-top: 1.25rem;
 }
 
   /* Spacing between sections */
@@ -123,9 +134,9 @@ const { Content } = await render(chapter);
   .chapter-body ul li {
     font-size: 0.85rem;
     color: var(--ink);
-    padding: 0.4rem 0 0.4rem 1.25rem;
+    padding: 0.2rem 0 0.2rem 1.25rem;
     position: relative;
-    line-height: 1.7;
+    line-height: 1.6;
   }
 
   .chapter-body ul li::before {
