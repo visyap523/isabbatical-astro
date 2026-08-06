@@ -14,8 +14,15 @@ import Layout from '../layouts/Layout.astro';
     />
   </header>
 
+  <nav class="about-nav">
+  <a href="#tech-career">Tech career</a>
+  <a href="#product-manager">Me as a PM</a>
+  <a href="#looking-for-a-job">Job search</a>
+  <a href="#other-facts">Other facts</a>
+</nav>
+
   <!-- TECH CAREER -->
-  <section>
+  <section id="tech-career">
     <h2>Tech Career</h2>
     <p>Since you wanted more, you get the long version.</p>
     <p>I've worked in the tech industry since 2012.</p>
@@ -37,7 +44,7 @@ import Layout from '../layouts/Layout.astro';
   </section>
 
   <!-- ME AS A PRODUCT MANAGER -->
-  <section>
+  <section id="product-manager">
     <h2>Me as a Product Manager</h2>
     <p>I believe the core of the PM role boils down to the following:</p>
     <ul class="about-list">
@@ -58,7 +65,7 @@ import Layout from '../layouts/Layout.astro';
   </section>
 
   <!-- ARE YOU LOOKING FOR A JOB? -->
-  <section>
+  <section id="looking-for-job">
     <h2>Are you looking for a job?</h2>
     <p>I'm looking to start full-time employment again in Dec 2026/Jan 2027.</p>
     <p>That said, if you have an interesting opportunity—let's chat! I'm selectively looking for consulting or part-time projects to work on through 2026. Or if you think a role will be available for me in Q1 of next year, I'm happy to start the conversation early.</p>
@@ -81,7 +88,7 @@ import Layout from '../layouts/Layout.astro';
   </section>
 
   <!-- OKAY ENOUGH ABOUT TECH -->
-  <section>
+  <section id="other-interests">
     <h2>Okay enough about tech, tell me some other interesting things</h2>
     <ul class="about-list">
       <li>I'm a writer, and have been publishing fiction since 2009.
@@ -157,6 +164,27 @@ import Layout from '../layouts/Layout.astro';
     object-fit: cover;
     flex-shrink: 0;
   }
+
+  .about-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.5rem;
+  margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.about-nav a {
+  font-size: 0.8rem;
+  color: var(--ink-light);
+  text-decoration: none;
+  letter-spacing: 0.04em;
+  transition: color 0.2s;
+}
+
+.about-nav a:hover {
+  color: var(--accent);
+}
 
   /* Section overrides — about page has tighter spacing than global */
   section {
