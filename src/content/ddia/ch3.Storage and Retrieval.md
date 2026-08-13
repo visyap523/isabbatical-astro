@@ -10,7 +10,7 @@ summary: "About storing and retrieving data; different index structures; and OLT
   * Give the data back when you ask for it later
 * Teams likely won’t need to implement a storage engine from scratch, but selecting the appropriate one is important.
 
-### Intro to Index Structures
+## Intro to Index Structures
 * Log: append-only data file/sequence of records
 * Index: additional structure derived from primary data. Typically doesn’t affect content of database, just the performance of queries.
   * An index will slow down writes bc it needs to be updated every time data is written, but it speeds up read queries
@@ -22,7 +22,7 @@ summary: "About storing and retrieving data; different index structures; and OLT
     * Concurrency control: tend to only have one writer thread since writes are appended in sequential order
   * Benefits: much faster than random writes; easier concurrency and crash recovery
   * Downsides: hash table must fit in memory; range queries are not efficient
-* SSTables and LSM-Trees
+* **SSTables and LSM-Trees**
   * Sorted String Table/SSTable: requires sequence of key-value pairs to be sorted by key. Cannot append new key-value pairs to segment immediately, since writes can occur in any order.
     * Managing segments is simple and efficient
     * Easier to find a particular key in the file since you no longer need to keep an index of all keys in memory
@@ -34,7 +34,7 @@ summary: "About storing and retrieving data; different index structures; and OLT
   * Lucene: indexing engine for full-text search used by Elasticsearch and Solr
   * Bloom filter: a way for storage engines to optimize access; this is a memory-efficient data structure for approximating the contents of a set. Can tell you if a key does not appear in the database, and saves unnecessary disk read for nonexistent keys
   * To determine order/timing of how SSTables are compacted and merge, can use size-tiered and leveled compaction.
-* B-Tree: most common indexing structure
+* **B-Tree: most common indexing structure**
   * Standard for relational databases
   * Keeps key-value pairs sorted by key
   * Breaks databases down into fixed-size blocks or pages, traditionally 4kb in size, and read/write one page at a time
@@ -47,7 +47,7 @@ summary: "About storing and retrieving data; different index structures; and OLT
     * Typically done by protecting tree’s data structures with latches (lightweight locks)
 * *Generally,* LSM-trees are faster for writes, B-trees are faster for reads. But to be sure, you should test systems with your specific workload.
 
-### Other indexing structures
+## Other indexing structures
 * Secondary indexes: often crucial for performing joins efficiently
   * Difference from key-value index is that indexed values aren’t necessarily unique. There may be many rows under the same index entry.
 * Multi-column indexes: necessary if we need to query multiple columns of a table simultaneously
@@ -58,7 +58,7 @@ summary: "About storing and retrieving data; different index structures; and OLT
   * They are faster bc they avoid the overhead of encoding in-memory data structures in a form that can be written to disk
   * Can also provide data models that are difficult to implement with disk-based indexes (ex. **Redis** offers a database-like interface to data structures like priority queues and sets)
 
-### Transaction Processing VS Analytics
+## Transaction Processing VS Analytics
 * Transactions: a group of reads/writes that form a logical unit
   * Historically used for commercial transactions taking place, etc making a sale, placing an order, playing employee salary
   * Access pattern: application looks up a small number of records by some key, using an index. Records are inserted or updated based on user input.
@@ -72,7 +72,7 @@ summary: "About storing and retrieving data; different index structures; and OLT
   * This is to avoid analytic queries affecting performance of transactional databases; analysts can query as much as they like
   * OLTP tend to be highly available and low-latency bc they are critical for biz operations.
   * OLAP queries are ad-hoc, and can be expensive bc they scan large parts of the dataset, potentially affecting performance of concurrently executing transactions
-* A Data Warehouse containsa read-only copy of the data from various OLTP systems in the company
+* A Data Warehouse contains a read-only copy of the data from various OLTP systems in the company
   * These are extracted either through a periodic data dump, or a continuous stream of updates
   * Data is then transformed into an analysis-friendly schema, cleaned up, then loaded into the warehouse (Extract/Transform/Load or ELT process)
   * Can be optimized for analytic access patterns
@@ -99,7 +99,7 @@ summary: "About storing and retrieving data; different index structures; and OLT
 * These are great for making large read-only queries more performant; it does make writes more difficult
   * Update-in-place a la B-tree isn’t possible
   * LSM-trees work though. Writes go to an in-memory store first, which are then added to a sorted structure and prepared for writing to disk.
-* Materialized aggregates
+* **Materialized aggregates**
   * ex. Count, Sum, Avg, Min, Max
   * Caching of counts or sums that queries use most often
   * Can be done by creating a *materialized view*: often defined like a standard (virtual) view, a table-like object with contents that are the results of some query
@@ -107,7 +107,7 @@ summary: "About storing and retrieving data; different index structures; and OLT
   * When the underlying data changes, MV must be updated bc it’s a denormalized copy of the data. Makes writes more expensive, so tends not to be used for OLTP.
   * Special case of MV: data cube or OLAP cube. Can make queries v fast bc they’ve been precomputed! BUT, not as flexible as querying the raw data. Thus you use data cubes for performance boosts for certain queries.
 
-### Summary
+## Summary
 * OLTP systems: user-facing, see a huge volume of requests
   * To handle load, applications only touch a small number of records in each query
   * App requests records using a key; storage engine uses index to find data for the requested key
@@ -126,7 +126,7 @@ summary: "About storing and retrieving data; different index structures; and OLT
 
 ---
 
-### Notes from my own experience
+## Notes from my own experience
 * OLTP vs OLAP!
 * Data Warehouse largely used for queries; also why the team was called “Online Analytics”
 * Idea of joins, aggregate data, and use of Materialized Views to speed up key queries
