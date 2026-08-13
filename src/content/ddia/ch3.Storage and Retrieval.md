@@ -85,7 +85,7 @@ summary: "About storing and retrieving data; different index structures; and OLT
   * Snowflake Schema: dimensions are further broken down into subdimensions
 * Typically in a data warehouse, tables are very wide (ex. >100 columns). Dimension tables can also be very wide as these contain all the metadata relevant for analysts.
 
-### Column-Oriented Storage
+## Column-Oriented Storage
 * A typical DWH query only accesses 4 or 5 columns at once, even if fact tables are over 100 columns wide
 * Thus: might make more sense to store all values from each *column* together instead. Hence column-oriented storage.
   * Spares you from having to load every row and filter out those that don’t meet the conditions
@@ -123,8 +123,6 @@ summary: "About storing and retrieving data; different index structures; and OLT
 * High level architecture of a typical data warehouse
   * Queries require sequentially scanning across a large number of rows, so indexes are less relevant. It becomes more import to encode data compactly.
   * Column-oriented storage helps achieve this goal.
-
----
 
 ## Notes from my own experience
 * OLTP vs OLAP!
