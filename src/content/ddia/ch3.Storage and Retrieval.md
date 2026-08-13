@@ -1,5 +1,5 @@
 ---
-title: "Chapter 3: Storage and Retrieval"
+title: "Storage and Retrieval"
 chapter: 3
 date: "2026-08-12"
 summary: "About storing and retrieving data; different index structures; and OLTP vs Analytical Databases/Data Warehouses."
@@ -127,6 +127,7 @@ summary: "About storing and retrieving data; different index structures; and OLT
 ## Notes from my own experience
 * OLTP vs OLAP!
 * Data Warehouse largely used for queries; also why the team was called “Online Analytics”
+  * Tho book makes a point to say "meaning of online in OLAP is unclear, it probably means queries are not just for pre-defined reports, but explorative queries"
 * Idea of joins, aggregate data, and use of Materialized Views to speed up key queries
 * We always discussed that performance tradeoff and latency; how often are people running these queries? Do they really need it to be sub-second performance? How much flexibility did they need with the data/filters?
   * Interestingly we were building analytics tools for end-users too; that’s where we started, and internal analysts had different tools. There was some oeffort to merge them.
