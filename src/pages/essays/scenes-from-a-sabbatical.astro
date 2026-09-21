@@ -197,8 +197,9 @@ import { render } from 'astro:content';
     .essay-meta { flex-direction: column; align-items: flex-start; gap: 0.3rem; }
     .reading-time { padding-left: 0; border-left: none; margin-left: 0; }
     .essay-title { font-size: 1.5rem; }
+  }
 
-    #progress-bar {
+     #progress-bar {
   position: fixed;
   top: 0;
   left: 0;
@@ -208,23 +209,37 @@ import { render } from 'astro:content';
   z-index: 100;
   transition: width 0.1s ease;
 }
-  }
 </style>
 
+<!-- Reading progress bar — sits at top of page -->
+<div id="progress-bar"></div>
+
 <script>
+  // =============================================
+  // READING TIME
+  // Counts words in the essay body, divides by 200 wpm
+  // =============================================
   const body = document.querySelector('.essay-body');
   const words = body.innerText.trim().split(/\s+/).length;
   const minutes = Math.ceil(words / 200);
-  const readingTime = document.querySelector('.reading-time');
-  if (readingTime) readingTime.textContent = `${minutes} min read`;
+  
+  // Insert reading time into the essay header
+  const meta = document.querySelector('.essay-meta');
+  const readingTime = document.createElement('span');
+  readingTime.className = 'reading-time';
+  readingTime.textContent = `${minutes} min read`;
+  meta.appendChild(readingTime);
 
-  const bar = document.createElement('div');
-  bar.id = 'progress-bar';
-  document.body.appendChild(bar);
-
+  // =============================================
+  // READING PROGRESS BAR
+  // Tracks scroll position relative to essay length
+  // =============================================
+  const bar = document.getElementById('progress-bar');
+  
   window.addEventListener('scroll', () => {
     const scrollTop = window.scrollY;
     const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-    bar.style.width = `${(scrollTop / docHeight) * 100}%`;
+    const progress = (scrollTop / docHeight) * 100;
+    bar.style.width = `${progress}%`;
   });
 </script>
