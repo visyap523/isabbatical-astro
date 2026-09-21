@@ -23,6 +23,7 @@
 - OpenStreetMap (map data)
 - Web3Forms (form submissions)
 - Google Fonts (Lora + DM Sans)
+- Cloudflare R2 (object storage — photo uploads)
 
 ### Developer Tools
 - VS Code (code editor)
@@ -47,10 +48,33 @@
 - define:vars (Astro frontmatter → client script bridge)
 - JSON.stringify / JSON.parse
 - CDN (content delivery network)
-- PWA (Progressive Web App) — coming soon
-- Cloudflare D1 — coming soon
+- Cloudflare D1
+- Cloudflare Workers sessions (Astro.session, KV-backed)
+- Cloudflare R2 (buckets, bindings, public access via r2.dev)
+- D1 local vs. remote bindings (astro dev defaults to local emulation unless configured otherwise)
+- wrangler.toml bindings ([[d1_databases]], [[r2_buckets]], [vars])
+- Environment secrets vs. plain vars (wrangler secret vs. [vars])
+- Astro middleware (defineMiddleware, request interception before routing)
+- Astro dynamic routes ([id].astro, nested [id]/edit.astro)
+- FormData + multipart form uploads
+- DataTransfer API (client-side drag-to-reorder of file inputs)
+- CSS scroll-snap (touch carousels without a JS library)
+- SQL: FOREIGN KEY constraints, ON CONFLICT DO UPDATE, RETURNING/last_row_id
+- zsh quirks (glob patterns on [brackets], line-editing shortcuts)
 
 # Changelog Entries
+
+## September 17, 2026
+- Built henro.isabbatical.net/journal — full read/write pilgrimage journal
+- Set up R2 bucket for photo storage, D1 schema for entries/photos/temples/reactions
+- Built password-protected auth with session-based middleware
+- Built entry input form — text fields, temple multi-select (pilgrimage order), draft/publish toggle
+- Added photo upload to R2 with client-side drag-to-reorder before submit
+- Built public journal index — published/draft sections, date strip, previews
+- Built individual entry page — swipeable photo carousel, prev/next nav, temple chips, timestamps
+- Built edit page — pre-filled form, photo delete + add
+- Debugged and resolved an upstream Cloudflare Vite plugin bug (chicken-and-egg wrangler.toml `main` field validation) via package upgrades
+- Fixed D1/R2 local-vs-remote binding mismatch (`remote = true` in wrangler.toml)
 
 ## July 25, 2026
 - Built Henro app as separate Cloudflare Worker at henro.isabbatical.net
